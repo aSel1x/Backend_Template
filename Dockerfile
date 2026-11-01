@@ -1,5 +1,5 @@
 FROM ghcr.io/astral-sh/uv:latest AS uv
-FROM python:3.14-slim-bookworm AS builder
+FROM python:3.15-slim-bookworm AS builder
 
 COPY --from=uv /uv /uvx /bin/
 COPY uv.lock pyproject.toml ./
@@ -9,7 +9,7 @@ COPY uv.lock pyproject.toml ./
 RUN uv export --frozen --no-dev --no-emit-project -o requirements.prod.txt && \
     uv export --frozen --no-emit-project -o requirements.dev.txt
 
-FROM python:3.14-slim-bookworm AS dev
+FROM python:3.15-slim-bookworm AS dev
 
 WORKDIR /src
 
@@ -34,7 +34,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
 
 CMD ["uvicorn", "presentation.http.app:get_litestar", "--factory", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
-FROM python:3.14-slim-bookworm AS prod
+FROM python:3.15-slim-bookworm AS prod
 
 WORKDIR /src
 
